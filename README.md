@@ -132,6 +132,7 @@ in uncovering functional and error handling issues in the code,
 
 ###### Performance tests
 The performance of the WordStock utility was measured by varying the
+number of input data files
 
 | data files  |  Patterns | Execution time|
 | ------------- |-------------|-------------|
@@ -162,10 +163,10 @@ entrypoint of the container.
 * It works only on data and patterns files with *.txt* extension
 * The files both data and patterns are expected to be provided as input
   directories to WordStock
-* It is tested using docker installed Ubuntu 16.04.
+* It is tested using docker installed on Ubuntu 16.04.
 * Performance of WordStock drops as the number of files to take stock of
-  increases. The reason for this behavior need to be checked the program
-  needs to be tuned
+  increases. The reason for this behavior need to be checked in the program
+  and get tuned
 
 ### Building WordStock docker image
 Build the wordstock docker image from the parent directory of the
