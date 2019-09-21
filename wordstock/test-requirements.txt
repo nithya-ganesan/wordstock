@@ -1,0 +1,7 @@
+#(C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP
+pbr
+flake8==3.6.0
+pytest==5.1.2
+pytest-cov==2.7.1
+testrepository==0.0.20
+ddt==1.2.1
