@@ -58,7 +58,7 @@ output volume shared to the docker container
 Execution Time: 11.50390076637268
 
 ```
-Please note that the warning messages in the above output is expected as
+Please note that the warning messages may occur in the above output and is expected as
 WordStock does not support Unicode decode error.
 
 If the docker image pull fails please check the internet connectivity
