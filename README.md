@@ -1,6 +1,6 @@
 <!--- (C) Copyright 2019 Hewlett Packard Enterprise Development LP -->
 
-# WordStock -
+# WordStock
 
 Utility to search and take stock of words in large file sets
 
@@ -12,66 +12,23 @@ Utility to search and take stock of words in large file sets
    is behind the proxy. The version of docker used for testing is
    17.05.0-ce
 
-2. Test that your installation works by running the simple Docker image,
-   which would result in the output similar to the following
+2. Test that your installation works by running the following hello-world Docker image,
+   
    ```bash
-   gana@gana-HP-Z620-Workstation:~/upstream/wordstock$ docker run hello-world
-    Hello from Docker!
-    This message shows that your installation appears to be working correctly.
-
-    To generate this message, Docker took the following steps:
-     1. The Docker client contacted the Docker daemon.
-     2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
-        (amd64)
-     3. The Docker daemon created a new container from that image which runs the
-        executable that produces the output you are currently reading.
-     4. The Docker daemon streamed that output to the Docker client, which sent it
-        to your terminal.
-
-    To try something more ambitious, you can run an Ubuntu container with:
-     $ docker run -it ubuntu bash
-
-    Share images, automate workflows, and more with a free Docker ID:
-     https://hub.docker.com/
-
-    For more examples and ideas, visit:
-     https://docs.docker.com/engine/userguide/
-
-    gana@gana-HP-Z620-Workstation:~/upstream/wordstock$
+   docker run hello-world
     ```
 
 ## Usage
 
-### Test data generation
-To generate test data run the following command, This will create
-around 100 books as files in the test data directory. Please note
-that depending on the connectivity to the internet the test data
-generator may error out while downloading the URLs, but the script
-would continue to completion.
-    ```bash
-    docker run -it --rm --name <container_name> \
-    -v <absolute_path_to_data_set>:/data \
-    --entrypoint /wordstock/generate_data.sh \
-    nithyg/wordstock:v1
-    ```
-Note: Please add on the proxy variables if you are behind the proxy
-as shown below
-    ```bash
-    docker run -it --rm --name <container_name> \
-    -e http_proxy -e https_proxy -e no_proxy
-    -v <absolute_path_to_data_set>:/data \
-    --entrypoint /wordstock/generate_data.sh \
-    nithyg/wordstock:v1
-    ```
-
 ### Running WordStock utility
 To run the WordStock utility, run the following command
+
     ```bash
-    docker run -it --rm --name <container_name> \
-    -v <absolute_path_to_data_set>:/data \
-    -v <absolute_path_to_patterns>:/pattern \
-    -v <absolute_path_to_output>:/output nithyg/wordstock:v1 -f <csv|json>
-    ```
+     docker run -it --rm --name <container_name> \
+     -v <absolute_path_to_data_set>:/data \
+     -v <absolute_path_to_patterns>:/pattern \
+     -v <absolute_path_to_output>:/output nithyg/wordstock:v1 -f <csv|json>
+     ```
 
 ###### Typical WordStock output
 
@@ -112,6 +69,7 @@ from workstation.
 ###### Python Linting
 WordStock is *flake8* compliant and can be run on the WordStock code
 in the container as follows
+
 ```bash
     docker run -it --rm --name <container_name> \
     -e http_proxy -e https_proxy -e no_proxy \
@@ -174,6 +132,7 @@ in uncovering functional and error handling issues in the code,
 
 ###### Performance tests
 The performance of the WordStock utility was measured by varying the
+
 | data files  |  Patterns | Execution time|
 | ------------- |-------------|-------------|
 | 5  (<2kb)      | Constant(15)   |5 seconds|
@@ -216,6 +175,30 @@ source code, using the following command,
    docker build --build-arg http_proxy=$http_proxy --build-arg \
    https_proxy=$https_proxy -t wordstock .
 ```
+
+### Test data generation
+To generate test data run the following command, This will create
+around 100 books as files in the test data directory. Please note
+that depending on the connectivity to the internet the test data
+generator may error out while downloading the URLs, but the script
+would continue to completion.
+
+    ```bash
+     docker run -it --rm --name <container_name> \
+     -v <absolute_path_to_data_set>:/data \
+     --entrypoint /wordstock/generate_data.sh \
+     nithyg/wordstock:v1
+    ```
+Note: Please add on the proxy variables if you are behind the proxy
+as shown below
+
+    ```bash
+     docker run -it --rm --name <container_name> \
+     -e http_proxy -e https_proxy -e no_proxy
+     -v <absolute_path_to_data_set>:/data \
+     --entrypoint /wordstock/generate_data.sh \
+     nithyg/wordstock:v1
+    ```
 
 ## Next Steps
 
