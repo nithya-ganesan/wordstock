@@ -1,15 +1,16 @@
 # (C) Copyright 2019 Hewlett Packard Enterprise Development LP
 
 from ddt import ddt, data
-from wordstock.tests import base as test_base
+import pandas as pd
 from unittest import mock
 from wordstock import stock
+from wordstock.tests import base as test_base
 
 import logging
 
 
 @ddt
-class TestStock(test_base.TestBase):
+class TestStockUnit(test_base.TestBase):
 
     @classmethod
     def setUpClass(cls):
@@ -35,8 +36,8 @@ class TestStock(test_base.TestBase):
         sys_exit.assert_called_once_with(2)
 
     # Uses Data driven testing to provide multiple input to the same test
-    @data(["-d", "-i", "data", "-p", "pattern", "-o", "output", "-f", "json"],
-          ["--debug", "--datadir", "data", "--seeddir", "pattern",
+    @data(["-i", "data", "-p", "pattern", "-o", "output", "-f", "json"],
+          ["--datadir", "data", "--seeddir", "pattern",
           "--outputdir", "output", "--outputformat", "json"])
     def test_argparser(self, inputs):
         parser = stock.build_argparser()
@@ -45,10 +46,30 @@ class TestStock(test_base.TestBase):
         self.assertEqual(parsed.outputdir, 'output')
         self.assertEqual(parsed.seeddir, 'pattern')
         self.assertIn(parsed.outputformat, ["csv", "json"])
-        self.assertTrue(parsed.debug)
 
     def test_check_dir_none(self):
         stock.check_dir(None)
+
+    def test_get_unique_words(self):
+        test_frame = pd.DataFrame(data={'words': ["data1", "data2", "data1"]})
+        unique_list = stock.get_unique_words(test_frame)
+        self.assertEqual(2, len(unique_list))
+        self.assertIn("data1", unique_list)
+        self.assertIn("data2", unique_list)
+
+    @data({'no_words': []},
+          {'words': []})
+    def test_get_unique_words_negative(self, inputs):
+        test_frame = pd.DataFrame(data=inputs)
+        unique_list = stock.get_unique_words(test_frame)
+        self.assertEqual(0, len(unique_list))
+        unique_list = stock.get_unique_words(None)
+        self.assertEqual(0, len(unique_list))
+
+    def test_get_word_count_negative(self):
+        test_frame = pd.DataFrame(data={'words': ["data1", "data2", "data1"]})
+        count_frame = stock.get_word_count(test_frame, [], 'words')
+        self.assertEqual(None,count_frame)
 
     @mock.patch("sys.exit", side_effect=SystemExit)
     @mock.patch("os.path.isdir", return_value=False)
