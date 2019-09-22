@@ -99,7 +99,7 @@ uses the following
 To know the unit test coverage of the code shipped used pytest-cov package
 Following is the Unit test coverage so far is
 All these tests will be run as a part of the travis CI in the github
-project as a next step
+project as a next step,
 
 ```bash
 ----------- coverage: platform linux, python 3.7.4-final-0 -----------
