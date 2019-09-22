@@ -13,7 +13,7 @@ Utility to search and take stock of words in large file sets
    17.05.0-ce
 
 2. Test that your installation works by running the following hello-world Docker image,
-   
+
    ```bash
    docker run hello-world
     ```
@@ -118,16 +118,8 @@ TOTAL                                  187     93    50%
 ```
 
 ###### Functional tests
-The following tests were executed manually which in addition to others
-will be automated using python-unittests framework. These tests helped
-in uncovering functional and error handling issues in the code,
-
-1) Run WordStock with test input directories that doesnt exists
-2) Run WordStock with test input directories that doesnt have .txt files
-3) Test with no patterns in txt file
-4) Make test data set and pattern files the same and check its working
-5) Test csv and json output formats
-6) WordStock Usage output testing
+The functional tests for WordStock are automated using python-unittests
+framework and available at tests/test_stock_functional.py
 
 
 ###### Performance tests
