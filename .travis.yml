@@ -5,9 +5,10 @@ services:
 
 before_install:
   - docker build --no-cache -t wordstock .
-  - docker run -d --entrypoint flake8 wordstock /wordstock
-  - docker ps -a
-  - docker run -d --entrypoint pytest nithyg/wordstock:v1 --cov=wordstock --cov-report term-missing /wordstock/tests
+  - docker run -d --name wordstock-ci -v $(pwd)/wordstock/tests/data:/wordstock/data -v $(pwd)/wordstock/tests/patterns:/wordstock/patterns -w /wordstock wordstock:latest tail -f /dev/null
+
+env: DOCKER_SH="docker exec -t wordstock-ci bash -c"
 
 script:
-  - ls
+  - $DOCKER_SH "flake8"
+  - DOCKER_SH "pytest nithyg/wordstock:v1 --cov=wordstock --cov-report term-missing /wordstock/tests"

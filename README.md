@@ -103,17 +103,19 @@ project as a next step,
 
 ```bash
 ----------- coverage: platform linux, python 3.7.4-final-0 -----------
-Name                                 Stmts   Miss  Cover
---------------------------------------------------------
-/wordstock/__init__.py                   0      0   100%
-/wordstock/setup.py                      7      7     0%
-/wordstock/stock.py                     88     58    34%
-/wordstock/tests/__init__.py             0      0   100%
-/wordstock/tests/base.py                22      4    82%
-/wordstock/tests/create_dataset.py      23     23     0%
-/wordstock/tests/test_stock.py          47      1    98%
---------------------------------------------------------
-TOTAL                                  187     93    50%
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+/wordstock/__init__.py                          0      0   100%
+/wordstock/setup.py                             7      7     0%   17-25
+/wordstock/stock.py                           104      5    95%   74, 183-187, 191
+/wordstock/tests/__init__.py                    0      0   100%
+/wordstock/tests/base.py                       22      4    82%   28-31
+/wordstock/tests/create_dataset.py             23     23     0%   1-38
+/wordstock/tests/test_stock_functional.py      56      0   100%
+/wordstock/tests/test_stock_unit.py            59      0   100%
+-------------------------------------------------------------------------
+TOTAL                                         271     39    86%
+
 
 ```
 
