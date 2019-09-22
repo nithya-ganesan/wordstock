@@ -63,7 +63,9 @@ def build_frame(input_dir, frame_name):
     if len(file_data) > 0:
         file_doc = pd.concat(file_data)
         file_doc['words'] = file_doc.lines.str.strip().str.split('[\\W_]+')
-        rows = file_doc.explode('words')
+        frame = pd.DataFrame(file_doc, columns=[frame_name, 'words'])
+        frame = frame[frame.words.str.len() > 0]
+        rows = frame.reset_index().explode('words')
         frame = pd.DataFrame(rows, columns=[frame_name, 'words'])
         frame = frame[frame.words.str.len() > 0]
         return frame
