@@ -1,0 +1,13 @@
+language: python
+
+services:
+  - docker
+
+before_install:
+  - docker build --no-cache -t wordstock .
+  - docker run -d --entrypoint flake8 wordstock /wordstock
+  - docker ps -a
+  - docker run -d --entrypoint pytest nithyg/wordstock:v1 --cov=wordstock --cov-report term-missing /wordstock/tests
+
+script:
+  - ls
