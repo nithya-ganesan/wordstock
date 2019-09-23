@@ -15,8 +15,6 @@ def build_argparser():
     :return: parser built by the function
     """
     parser = ArgumentParser(description='Gather products from other repos')
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='Enable debug logging')
     parser.add_argument('-i', '--datadir', type=str,
                         help='''Input the directory location to find the
                             dataset. Wordstock looksup at all text files
@@ -62,13 +60,16 @@ def build_frame(input_dir, frame_name):
                 continue
     if len(file_data) > 0:
         file_doc = pd.concat(file_data)
-        file_doc['words'] = file_doc.lines.str.strip().str.split('[\\W_]+')
-        frame = pd.DataFrame(file_doc, columns=[frame_name, 'words'])
-        frame = frame[frame.words.str.len() > 0]
-        rows = frame.reset_index().explode('words')
-        frame = pd.DataFrame(rows, columns=[frame_name, 'words'])
-        frame = frame[frame.words.str.len() > 0]
-        return frame
+        if len(file_doc.lines) > 0:
+            file_doc['words'] = file_doc.lines.str.strip().str.split('[\\W_]+')
+            frame = pd.DataFrame(file_doc, columns=[frame_name, 'words'])
+            frame = frame[frame.words.str.len() > 0]
+            rows = frame.reset_index().explode('words')
+            frame = pd.DataFrame(rows, columns=[frame_name, 'words'])
+            frame = frame[frame.words.str.len() > 0]
+            return frame
+        else:
+            return None
     else:
         return None
 
@@ -77,9 +78,15 @@ def get_unique_words(frame):
     """
     Get a list of unique words from frame
     :param frame:
-    :return:
+    :return: list of unique words or empty list
     """
-    return frame.words.unique().tolist()
+    if frame is None:
+        return []
+    else:
+        if hasattr(frame, "words"):
+            return frame.words.unique().tolist()
+        else:
+            return []
 
 
 def write_output(frame, output_dir, output_format):
@@ -123,24 +130,22 @@ def get_word_count(frame, pattern_list, group_by_name):
     if not pattern_list or len(pattern_list) == 0:
         return None
     else:
-        return pd.DataFrame(frame[frame.words.isin(pattern_list)].
-                            groupby(group_by_name).words.value_counts()
-                            .to_frame())
+        sub_frame = frame[frame.words.isin(pattern_list)]
+        if not sub_frame.empty:
+              return pd.DataFrame(sub_frame).groupby(group_by_name).\
+                words.value_counts().to_frame()
+        else:
+            return None
 
 
-def main():
-    """
-    WordStock - Main method
-    """
-    # Build WordStock input parser
-    parser = build_argparser()
-
-    # Retrieve input arguments
-    ns = parser.parse_args()
-    pattern_dir = ns.seeddir
-    data_dir = ns.datadir
-    output_dir = ns.outputdir
-
+def word_stock(ns):
+    if not ns:
+        logging.error("Empty input")
+        sys.exit(1)
+    start = time.time()
+    pattern_dir = ns['seeddir']
+    data_dir = ns['datadir']
+    output_dir = ns['outputdir']
     # Check Test input sanity
     check_dir([data_dir, pattern_dir])
 
@@ -162,13 +167,25 @@ def main():
     # Get word count
     count_frame = get_word_count(data_frame, pattern_list, "data_set")
     if count_frame is not None:
-        write_output(count_frame, output_dir, ns.outputformat)
+        write_output(count_frame, output_dir, ns['outputformat'])
     else:
         logging.info("Requested word patterns not found in the given data set")
+    end = time.time()
+    print("Execution Time: " + str(end - start))
+    return count_frame
+
+
+def main():
+    """
+    WordStock - Main method
+    """
+    # Build WordStock input parser
+    parser = build_argparser()
+
+    # Retrieve input arguments
+    ns = parser.parse_args()
+    word_stock(vars(ns))
 
 
 if __name__ == '__main__':
-    start = time.time()
     main()
-    end = time.time()
-    print("Execution Time: " + str(end - start))

@@ -13,7 +13,7 @@ Utility to search and take stock of words in large file sets
    17.05.0-ce
 
 2. Test that your installation works by running the following hello-world Docker image,
-   
+
    ```bash
    docker run hello-world
     ```
@@ -99,35 +99,29 @@ uses the following
 To know the unit test coverage of the code shipped used pytest-cov package
 Following is the Unit test coverage so far is
 All these tests will be run as a part of the travis CI in the github
-project as a next step
+project as a next step,
 
 ```bash
 ----------- coverage: platform linux, python 3.7.4-final-0 -----------
-Name                                 Stmts   Miss  Cover
---------------------------------------------------------
-/wordstock/__init__.py                   0      0   100%
-/wordstock/setup.py                      7      7     0%
-/wordstock/stock.py                     88     58    34%
-/wordstock/tests/__init__.py             0      0   100%
-/wordstock/tests/base.py                22      4    82%
-/wordstock/tests/create_dataset.py      23     23     0%
-/wordstock/tests/test_stock.py          47      1    98%
---------------------------------------------------------
-TOTAL                                  187     93    50%
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+/wordstock/__init__.py                          0      0   100%
+/wordstock/setup.py                             7      7     0%   17-25
+/wordstock/stock.py                           104      5    95%   74, 183-187, 191
+/wordstock/tests/__init__.py                    0      0   100%
+/wordstock/tests/base.py                       22      4    82%   28-31
+/wordstock/tests/create_dataset.py             23     23     0%   1-38
+/wordstock/tests/test_stock_functional.py      56      0   100%
+/wordstock/tests/test_stock_unit.py            59      0   100%
+-------------------------------------------------------------------------
+TOTAL                                         271     39    86%
+
 
 ```
 
 ###### Functional tests
-The following tests were executed manually which in addition to others
-will be automated using python-unittests framework. These tests helped
-in uncovering functional and error handling issues in the code,
-
-1) Run WordStock with test input directories that doesnt exists
-2) Run WordStock with test input directories that doesnt have .txt files
-3) Test with no patterns in txt file
-4) Make test data set and pattern files the same and check its working
-5) Test csv and json output formats
-6) WordStock Usage output testing
+The functional tests for WordStock are automated using python-unittests
+framework and available at tests/test_stock_functional.py
 
 
 ###### Performance tests
