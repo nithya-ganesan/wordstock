@@ -1,27 +1,29 @@
+sudo: required 
 language: python
-
 services:
   - docker
 
 before_install:
-  - docker build -t wordstock .
+  - docker build --no-cache -t wordstock .
   - docker run -d --name wordstock-ci -v $(pwd)/wordstock/tests/data:/wordstock/data -v $(pwd)/wordstock/tests/patterns:/wordstock/patterns -w /wordstock wordstock:latest tail -f /dev/null
   - docker ps -a
   - docker logs wordstock-ci
 
-env: DOCKER_SH="docker exec -t wordstock-ci bash -c"
-
-python:
-  - "3.7"
-  - pypy3
+env: DOCKER_SH="docker exec -t wordstock-ci bash -c "
 
 # command to install dependencies
-install:
-  - pip install -r wordstock/requirements.txt
+#install:
+#  - pip install -r wordstock/requirements.txt
 
 script:
-  - pytest --cov=wordstock --cov-report term-missing /wordstock/tests
+#  - pytest --cov=wordstock --cov-report term-missing /wordstock/tests
   - docker ps -a
   - docker logs wordstock-ci
-#  - $DOCKER_SH "flake8"
-#  - $DOCKER_SH "pytest --cov=wordstock --cov-report term-missing /wordstock/tests"
+  - $DOCKER_SH "pwd"
+  - docker ps -a
+  - docker exec -t wordstock-ci bash -c pwd
+  - docker ps -a
+  - docker exec -t wordstock-ci bash -c flake8
+  - docker exec -t wordstock-ci bash -c "type flake8"
+  - docker ps -a
+  - docker exec -t wordstock-ci bash -c "pytest --cov=wordstock --cov-report term-missing /wordstock/tests"
